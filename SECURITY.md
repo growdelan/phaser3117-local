@@ -52,3 +52,13 @@ a force kill or power failure can prevent cleanup.
 The queue is PPD-backed because macOS rejects raw queue creation, but the
 helper submits raw jobs to bypass CUPS filters. Ordinary PDF submission is
 unsupported and fails at the sandbox check. No CUPS sandbox is disabled.
+
+## Command-P PDF service
+
+The optional per-user PDF service is compiled locally from an auditable
+AppleScript. It receives the system-generated PDF open event and invokes the
+existing helper with a shell-quoted path. It requests no Accessibility/Input
+Monitoring permission, has no login agent, and does not synthesize keystrokes.
+It is not sandboxed itself, just like the existing helper; the raster encoder
+continues to apply its mandatory sandbox. The service is not a native CUPS
+filter and does not make ordinary direct PDF queue submissions supported.

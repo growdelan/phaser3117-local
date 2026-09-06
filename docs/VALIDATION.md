@@ -30,3 +30,14 @@ matrix or an independent audit.
   This is one confirmed one-page hardware test, not broad device certification.
 No user's document content, USB serial number, account paths, or test print PDF
 is committed to this repository.
+
+## Command-P integration (2026-09-06)
+
+- Locally compiled the PDF service and decompiled it to verify the installed
+  script matches the readable source.
+- Opened a one-page PDF in Preview, pressed Command-P, and verified the custom
+  action appears in the PDF menu.
+- Selected the action in that actual print dialog. CUPS reported a completed
+  job, one impression, and no printer-state error. Physical paper appearance
+  for this additional integration test has not been independently verified.
+- The encoder binary and sandbox policy were not modified for this integration.
