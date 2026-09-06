@@ -1,0 +1,8 @@
+Local arm64 build, macOS 26.6.2, Apple Clang, 2026-09-06.
+These hashes identify this tested build; they are not a safety certificate.
+Different compilers/SDKs may produce different binaries. Binaries are not committed.
+
+SHA-256 source src/rasterto3117.c:
+5add85ff70e49447e2fbd5ee3f987d38f22ecb56b06663f15c1707a61fc43eeb
+SHA-256 build/rasterto3117 (also verified for installed encoder):
+05d3dbd731b733bbc3365a8885a213967ec169ec4020440c8d820d155043c7d6

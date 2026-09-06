@@ -1,0 +1,17 @@
+Phaser 3117 Local
+Copyright (C) 2026 growdelan
+Written with OpenAI Codex assistance.
+
+This project contains a newly written, reduced raster filter. The authors
+studied the SpliX implementation to understand QPDL/SPL protocol behavior,
+compression packet syntax, and Xerox Phaser 3117 model constants. It is not
+a clean-room implementation and does not claim invention of the protocol.
+
+SpliX: Copyright (C) 2006-2008 Aurelien Croc (AP2C) and contributors.
+https://github.com/OpenPrinting/splix
+macOS reference adaptation: https://github.com/janrueth/splix-2.0.0-macos
+The local protocol investigation also used the Rossheper fork of that project.
+No third-party driver executables or object files are distributed here.
+
+This project's code is distributed under GPL-2.0-only, preserving compatibility
+with the license of the implementation consulted. See LICENSE.
