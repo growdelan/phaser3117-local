@@ -13,6 +13,11 @@
 #include <unistd.h>
 #ifdef __APPLE__
 #include <sandbox.h>
+#include <libproc.h>
+/* Apple SPI exported by libSystem; absence must fail closed.
+ * operation=NULL, filter=0 queries whether a process is sandboxed.
+ */
+extern int sandbox_check(pid_t, const char *, int, ...) __attribute__((weak_import));
 #else
 #error This filter requires the macOS sandbox.
 #endif
@@ -123,16 +128,30 @@ static void read_page(cups_raster_t *raster, const cups_page_header2_t *h) {
         memcpy(page + (y + i) * STRIDE + x, row, bytes);
     }
 }
+static int inherited_cups_sandbox(void) {
+    /* Do not trust environment variables or argv to identify CUPS.
+     * macOS runs filters as _lp (uid 26), parented by the system cupsd.
+     * Any missing identity or sandbox query causes rejection.
+     */
+    if (getuid() != 26 || geteuid() != 26 || !sandbox_check ||
+        sandbox_check(getpid(), NULL, 0) != 1) return 0;
+    char parent[PROC_PIDPATHINFO_MAXSIZE] = {0};
+    if (proc_pidpath(getppid(), parent, sizeof parent) <= 0) return 0;
+    return strcmp(parent, "/usr/sbin/cupsd") == 0;
+}
 static void confine(void) {
     char *error = NULL;
-    /* Already-open stdin/input and stdout remain usable. No new paths,
-     * network connections, child processes, or input-device services allowed.
-     * Failure is fatal: there is no unsandboxed fallback.
+    if (sandbox_init("(version 1)(deny default)", 0, &error) == 0) return;
+    if (error) sandbox_free_error(error);
+    /* macOS cannot stack this sandbox on CUPS's existing sandbox.
+     * Accept that inherited policy only in the verified system print service.
+     * It is broader than deny-default; see SECURITY.md. No unsandboxed mode.
      */
-    if (sandbox_init("(version 1)(deny default)", 0, &error) != 0) {
-        if (error) sandbox_free_error(error);
-        die("Cannot activate mandatory macOS sandbox");
+    if (inherited_cups_sandbox()) {
+        fprintf(stderr, "DEBUG: Using verified inherited CUPS sandbox\n");
+        return;
     }
+    die("Cannot establish a standalone or verified CUPS sandbox");
 }
 int main(int argc, char **argv) {
     if (argc != 6 && argc != 7)

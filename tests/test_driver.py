@@ -108,6 +108,16 @@ class DriverTests(unittest.TestCase):
             with self.subTest(mode=mode):
                 r = subprocess.run([str(ROOT/'build/sandbox-probe'), mode], capture_output=True)
                 self.assertEqual(r.returncode, 0, r.stderr)
+    def test_untrusted_inherited_sandbox_rejected(self):
+        # Even an active sandbox must not bypass print-service identity checks.
+        data = self.fixture('blank')
+        command = ['/usr/bin/sandbox-exec', '-p', '(version 1)(allow default)',
+                   str(FILTER), '1', 'synthetic', 'synthetic', '1', '']
+        result = subprocess.run(command, input=data, capture_output=True, timeout=20)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(result.stdout, b'')
+        self.assertIn(b'Cannot establish', result.stderr)
+
     def test_no_unexpected_imports(self):
         imports = subprocess.check_output(['/usr/bin/nm', '-u', str(FILTER)], text=True)
         forbidden = ['_socket', '_connect', '_exec', '_fork', '_system', '_popen',

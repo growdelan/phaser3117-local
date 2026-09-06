@@ -1,5 +1,8 @@
 # Validation record
 
+Earlier sections describe versions 0.1 and the PDF-menu workaround. The native
+printing section at the end records the current version 0.2 behavior.
+
 Local validation date: 2026-09-06.
 Host: Apple Silicon arm64, macOS 26.6.2. This is one host, not a compatibility
 matrix or an independent audit.
@@ -41,3 +44,27 @@ is committed to this repository.
   job, one impression, and no printer-state error. Physical paper appearance
   for this additional integration test has not been independently verified.
 - The encoder binary and sandbox policy were not modified for this integration.
+
+## Native Print button, version 0.2 (2026-09-06)
+
+- 11 tests passed on the normal build and under ASan/UBSan (leak detection off).
+- Added rejection test: an unrelated inherited sandbox cannot enable native mode.
+- Static analyzer: no diagnostics. Installed binary matches the recorded SHA-256.
+- Opened the one-page PDF in Preview, pressed Command-P, selected
+  Xerox Phaser 3117 (Local), and clicked the ordinary Print button.
+- The encoder accepted the verified `_lp`/cupsd sandbox context and produced a
+  page through Apple's standard renderer and USB backend.
+- The first native job was marked complete by CUPS, but the user reported no
+  paper output. That was a failed physical test, not success.
+- A temporary diagnostic build captured the native QPDL locally. It contained
+  the expected nonblank bands; no user data or diagnostic binary is published.
+- Added explicit `cupsFilter2` output type `application/vnd.xerox-qpdl`, avoiding
+  the implicit PostScript type used by legacy filter declarations.
+- The resulting native job completed with one impression and no printer error.
+  After a printer power cycle to clear the previous failed session, the actual
+  Preview Command-P → Print test completed with one impression and no errors.
+  The user confirmed the physical page printed correctly.
+- The temporary capture executable was removed; only the production encoder,
+  PPD and optional helper remain installed.
+- CUPS's inherited policy is broader than the standalone deny-default policy;
+  native mode does not claim standalone sandbox-denial test guarantees.

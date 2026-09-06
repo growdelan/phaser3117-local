@@ -1,6 +1,6 @@
 *PPD-Adobe: "4.3"
 *FormatVersion: "4.3"
-*FileVersion: "0.1"
+*FileVersion: "0.2"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "LOCAL17.PPD"
@@ -20,7 +20,7 @@
 *cupsVersion: 1.3
 *cupsModelNumber: 0
 *cupsManualCopies: True
-*cupsFilter: "application/vnd.cups-raster 0 /Library/Printers/Phaser3117Local/rasterto3117"
+*cupsFilter2: "application/vnd.cups-raster application/vnd.xerox-qpdl 0 /Library/Printers/Phaser3117Local/rasterto3117"
 *OpenUI *PageSize/Paper Size: PickOne
 *OrderDependency: 10 AnySetup *PageSize
 *DefaultPageSize: A4

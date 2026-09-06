@@ -35,3 +35,11 @@ existing protocol.
 References:
 - https://github.com/OpenPrinting/splix
 - https://github.com/janrueth/splix-2.0.0-macos
+
+## CUPS output type
+
+The PPD uses `cupsFilter2` to label the output `application/vnd.xerox-qpdl`.
+This is binary QPDL, not PostScript. Apple's USB backend contains special
+PostScript completion handling based on `FINAL_CONTENT_TYPE`, so leaving that
+type implicit is inappropriate even when the raster encoder itself succeeds.
+Reference: https://github.com/apple/cups/blob/master/backend/usb-darwin.c
